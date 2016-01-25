@@ -8,7 +8,6 @@ import akka.http.scaladsl.{HttpsContext, Http}
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import akka.stream.ActorMaterializer
-import akka.stream.scaladsl.Sink
 
 object Server extends App {
 
@@ -30,11 +29,5 @@ object Server extends App {
 
   val route = Route(complete("ok"))
 
-  val serverSource = Http().bind(interface = "0.0.0.0", port = 8081, httpsContext = Some(serverContext))
-  val bindingFuture = serverSource.to(Sink.foreach { connection =>
-    // foreach materializes the source
-    println("Accepted new connection from " + connection.remoteAddress)
-    // ... and then actually handle the connection
-    connection.handleWith(route)
-  }).run()
+  Http().bindAndHandle(route, interface = "0.0.0.0", port = 8081, httpsContext = Some(serverContext))
 }
