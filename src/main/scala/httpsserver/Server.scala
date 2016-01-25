@@ -1,6 +1,5 @@
 package httpsserver
 
-import java.io.InputStream
 import java.security.{SecureRandom, KeyStore}
 import javax.net.ssl.{KeyManagerFactory, SSLContext}
 
@@ -13,17 +12,11 @@ import akka.stream.scaladsl.Sink
 
 object Server extends App {
 
-  private def resourceStream(resourceName: String): InputStream = {
-    val is = getClass.getClassLoader.getResourceAsStream(resourceName)
-    require(is ne null, s"Resource $resourceName not found")
-    is
-  }
-
   val serverContext: HttpsContext = {
     val password = "abcdef".toCharArray
     val context = SSLContext.getInstance("TLS")
     val ks = KeyStore.getInstance("PKCS12")
-    ks.load(resourceStream("keys/server.p12"), password)
+    ks.load(getClass.getClassLoader.getResourceAsStream("keys/server.p12"), password)
     val keyManagerFactory = KeyManagerFactory.getInstance("SunX509")
     keyManagerFactory.init(ks, password)
     context.init(keyManagerFactory.getKeyManagers, null, new SecureRandom)
