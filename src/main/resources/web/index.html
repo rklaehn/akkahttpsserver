@@ -1,0 +1,32 @@
+<html>
+<head>
+    <title>WebSocket Echo Test</title>
+    <script>
+            function init() {
+            websocket = new WebSocket("wss://localhost:8081/ws-echo");
+
+            websocket.onopen = function() { document.getElementById("output").innerHTML += "<p>> CONNECTED</p>"; };
+
+            websocket.onmessage = function(evt) { document.getElementById("output").innerHTML += "<p style='color: blue;'>> RESPONSE: " + evt.data + "</p>"; };
+
+            websocket.onerror = function(evt) { document.getElementById("output").innerHTML += "<p style='color: red;'>> ERROR: " + evt.data + "</p>"; };
+            }
+
+            function sendMessage(message) {
+            document.getElementById("output").innerHTML += "<p>> SENT: " + message + "</p>";
+
+            websocket.send(message);
+            }
+
+            window.addEventListener("load", init, false);
+        </script>
+</head>
+<body>
+<form>
+    <input type="text" name="test" />
+    <button onclick="sendMessage(test.value); test.value = null; return false;">Send</button>
+</form>
+<hr>
+<div id="output"></div>
+</body>
+</html>
