@@ -45,5 +45,5 @@ object Server extends App {
     } ~
     complete("ok"))
 
-  Http().bindAndHandle(route, interface = "0.0.0.0", port = 8081, connectionContext = serverContext)
+  Http().bindAndHandle(route, interface = "0.0.0.0", port = 8443, connectionContext = serverContext)
 }
